@@ -4,3 +4,4 @@ django-registration-redux
 django-rest-framework
 django-cors-headers
 gunicorn
+requests
