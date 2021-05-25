@@ -7,8 +7,8 @@ VIRTUAL_ENV=/opt/circuitpython_designio_server                         # Virtual
 USER=webapps                                        # the user to run as
 GROUP=webapps                                       # the group to run as
 NUM_WORKERS=3                                       # how many worker processes should Gunicorn spawn
-DJANGO_SETTINGS_MODULE=[project_name].settings      # which settings file should Django use
-DJANGO_WSGI_MODULE=[project_name].wsgi              # WSGI module name
+DJANGO_SETTINGS_MODULE=circuitpython_designio_server.settings      # which settings file should Django use
+DJANGO_WSGI_MODULE=circuitpython_designio_server.wsgi              # WSGI module name
 
 echo "Starting $NAME as `whoami`"
 
