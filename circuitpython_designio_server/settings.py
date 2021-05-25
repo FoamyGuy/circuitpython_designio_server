@@ -27,7 +27,7 @@ SECRET_KEY = secrets["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["designio.foamyguy.com", "localhost"]
+ALLOWED_HOSTS = ["designio.foamyguy.com"]
 
 
 # Application definition
