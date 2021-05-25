@@ -92,7 +92,6 @@ AUTHENTICATION_BACKENDS = (
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 if DEBUG:
-
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

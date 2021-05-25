@@ -15,7 +15,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets
 
-from circuitpython_designio_server.settings import MEDIA_ROOT, ALLOWED_HOSTS, PORT_STR
+from circuitpython_designio_server.settings import MEDIA_ROOT, ALLOWED_HOSTS, PORT_STR, PROTOCOL
 from .models import Design
 from .serializer import DesignSerializer
 from django.core.files.base import ContentFile, File
@@ -159,7 +159,8 @@ def process_aio_hooks(design):
         signature_data = {
             "value": json.dumps({
                 "md5": img_md5,
-                "url": "http://{}{}/media/{}".format(
+                "url": "{}{}{}/media/{}".format(
+                    PROTOCOL,
                     ALLOWED_HOSTS[0], PORT_STR, design.content_image.name
                 )})
         }
