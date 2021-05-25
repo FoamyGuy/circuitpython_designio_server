@@ -68,7 +68,7 @@
 {#									</li>#}
 {#									<li><a href="left-sidebar.html">Left Sidebar</a></li>#}
 {#									<li><a href="right-sidebar.html">Right Sidebar</a></li>#}
-									{% if request.user %}
+									{% if user.is_authenticated %}
                     <li><a href="/list/designs/">My Designs</a></li>
                   {% else %}
                     <li><a href="/user/login/">Login</a></li>
