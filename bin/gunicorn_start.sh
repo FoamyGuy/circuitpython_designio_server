@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAME="CircuitPython Designio Server"                                   # Name of the application
+NAME="CircuitPython_Designio_Server"                                   # Name of the application
 DJANGODIR=/webapps/circuitpython_designio_server                       # Django project directory
 SOCKFILE=/webapps/circuitpython_designio_server/run/gunicorn.sock      # we will communicate using this unix socket
 VIRTUAL_ENV=/opt/circuitpython_designio_server                         # Virtual Environment base directory
