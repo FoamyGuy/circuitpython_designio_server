@@ -78,6 +78,8 @@ TEMPLATES = [
     },
 ]
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 WSGI_APPLICATION = 'circuitpython_designio_server.wsgi.application'
 
 AUTHENTICATION_BACKENDS = (
