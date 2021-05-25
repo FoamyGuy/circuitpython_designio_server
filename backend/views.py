@@ -16,7 +16,6 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets
 
 from circuitpython_designio_server.settings import MEDIA_ROOT, ALLOWED_HOSTS, PORT_STR
-from .aio_credentials import aio_credentials
 from .models import Design
 from .serializer import DesignSerializer
 from django.core.files.base import ContentFile, File
@@ -112,84 +111,6 @@ class UpdateDesignView(View):
         design.save()
 
         process_aio_hooks(design)
-        return JsonResponse({'success': True})
-
-
-class UploadAIODesignView(View):
-    def post(self, request, design_id):
-
-        try:
-            design = Design.objects.get(id=design_id, user=request.user)
-        except Design.DoesNotExist:
-            return JsonResponse({"success": False, "error": "Design not found"})
-
-        name = request.POST.get("name")
-
-        json_data = request.POST.get("json")
-        print(json_data)
-        format, imgstr = request.POST.get("image_base64").split(';base64,')
-        ext = format.split('/')[-1]
-
-        io = BytesIO()
-        im = Image.open(BytesIO(base64.b64decode(imgstr)))
-        im = im.convert(mode="P", palette=Image.WEB)
-
-        # im.save(io, format="bmp")
-        im.save(io, format="png")
-        io.seek(0)
-
-        imgstr = base64.b64encode(io.read())
-        # imgstr_size = len(imgstr.encode('utf-8'))
-        imgstr_size = len(imgstr)
-
-        print("imgstr bytes: {}".format(imgstr_size))
-
-        if imgstr_size > 102400:
-            im = im.convert('RGB')
-            optim_stream = io.BytesIO()
-
-            im.save(optim_stream, format='jpeg', quality=90, optimize=True)
-            # im.save(optim_stream, format='bmp', optimize=True)
-            optim_stream.seek(0)
-
-            # convert image binary data to base64 string
-            imgstr = base64.b64encode(optim_stream.read())
-
-            imgstr_size = len(imgstr)
-            print("imgstr bytes after compress: {}".format(imgstr_size))
-
-        # aio_url = "https://io.adafruit.com/api/v2/{username}/feeds/{feed_key}/data"
-        aio_url = "https://io.adafruit.com/api/v2/{}/feeds/designio.{}/data".format(aio_credentials['aio_username'],
-                                                                                    design.name)
-        data = {'value': imgstr}
-        headers = {'X-AIO-Key': aio_credentials['aio_key']}
-
-        resp = requests.post(aio_url, data=data, headers=headers)
-        print(resp.content)
-
-        # post JSON signature string
-
-        aio_url = "https://io.adafruit.com/api/v2/webhooks/feed/JtMDYjqUbCTPzcF3d2P6bpwyU547"
-        #aio_url = "https://io.adafruit.com/api/v2/{}/feeds/designio.image-signature/data".format(
-            #aio_credentials['aio_username'])
-        img_md5 = hashlib.md5(open(design.content_image.path, 'rb').read()).hexdigest()
-        signature_data = {
-            "value": json.dumps({
-                "md5": img_md5,
-                "url": "http://{}/media/{}".format(
-                    request.get_host(), design.content_image.name
-                )})
-            }
-
-
-        print(signature_data)
-        headers = {'X-AIO-Key': aio_credentials['aio_key']}
-
-
-        resp = requests.post(aio_url, data=signature_data, headers=headers)
-        print(resp.status_code)
-        print(resp.content)
-
         return JsonResponse({'success': True})
 
 
