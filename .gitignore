@@ -77,3 +77,4 @@ yarn-debug.log*
 yarn-error.log*
 
 frontend/design_page/src/Polotno_Key.js
+circuitpython_designio_server/secret_things.py

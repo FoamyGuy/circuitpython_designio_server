@@ -11,7 +11,7 @@
 - [ ] link to my designs from design page
 - [ ] add a way to delete designs in the front end
 - [ ] change html title
-- [ ] 
+- [ ] name the bmp file after the design name
 - [ ] 
 - [ ] 
 - [ ] 
