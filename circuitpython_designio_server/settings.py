@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'k1+s%klzk9p6(&@3bw9tru@mk%0p7!2s)*ab1yav_&6^s5pswz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["192.168.1.142", "localhost"]
+ALLOWED_HOSTS = ["designio.foamyguy.com"]
 
 
 # Application definition
