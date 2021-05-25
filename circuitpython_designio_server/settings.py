@@ -86,7 +86,6 @@ WSGI_APPLICATION = 'circuitpython_designio_server.wsgi.application'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
 )
 
 # Database
