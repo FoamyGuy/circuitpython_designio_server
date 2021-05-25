@@ -1,0 +1,1 @@
+{'md5': '2a7abe818eb60dcbc0689e43cd58b73d', 'url': '192.168.1.142:8000/media/content/temp_JhVDr7x.bmp'}

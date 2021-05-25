@@ -1,0 +1,10 @@
+
+
+.hidden{
+    display: none;
+}
+
+.feedback-tag{
+    position: relative;
+    left: 8px
+}

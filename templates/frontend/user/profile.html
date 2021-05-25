@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE HTML>
+<!--
+	Verti by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Verti by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+{#		<link rel="stylesheet" href="static/front_page/assets/css/main.css" />#}
+		<link rel="stylesheet" href="{% static 'front_page/assets/css/main.css' %}" />
+
+    <style>
+      .login_form{
+          width: 500px;
+          margin: auto;
+
+      }
+      #login_button{
+        width: 100%;
+      }
+      input[type=text], input[type=password]{
+          border: 2px solid #cdcdcd !important;
+          margin-bottom: 12px;
+
+      }
+
+      label{
+          font-size: 1.6em !important;
+          margin: 0 !important;
+      }
+      p {
+          font-size: 1.3em !important;
+      }
+    </style>
+	</head>
+	<body class="is-preload homepage">
+		<div id="page-wrapper">
+
+			<!-- Header -->
+				<div id="header-wrapper">
+					<header id="header" class="container">
+
+						<!-- Logo -->
+							<div id="logo">
+								<h1><a href="/">Designio</a></h1>
+{#								<span>by HTML5 UP</span>#}
+							</div>
+
+						<!-- Nav -->
+							<nav id="nav">
+								<ul>
+                  {% if request.user %}
+                    <li><a href="/list/designs/">My Designs</a></li>
+                  {% else %}
+                    <li><a href="/user/login/">Login</a></li>
+                  {% endif %}
+
+								</ul>
+							</nav>
+
+					</header>
+				</div>
+
+			<!-- Banner -->
+				<div id="banner-wrapper">
+					<div id="banner" class="box container profile_container">
+            <h2>Account Info:</h2>
+            <p>Username: {{ request.user.username }}</p>
+            <p>Email: {{ request.user.email }}</p>
+            <a href="{% url 'auth_password_reset' %}"><p>Change password</p></a>
+            <br />
+            <h2>Default Webhooks:</h2>
+            <div class="profile_form">
+              <form>
+                <label for="image_webhook_input">Default Adafruit.io Image Webhook</label>
+                <input id="image_webhook_input" class="form-control" type="text" placeholder="Image Webhook URL" />
+
+                <label for="signature_webhook_input">Default Adafruit.io Signature Webhook</label>
+                <input id="signature_webhook_input" class="form-control" type="text" placeholder="Signature Webhook URL" />
+
+                <button id="login_button" type="submit" class="form-control">Save Webhooks</button>
+              </form>
+            </div>
+					</div>
+				</div>
+
+
+
+			<!-- Footer -->
+				<div id="footer-wrapper">
+					<footer id="footer" class="container">
+
+						<div class="row">
+							<div class="col-12">
+								<div id="copyright">
+									<ul class="menu">
+										<li>&copy; Designio. All rights reserved</li><li>Web page design: <a href="http://html5up.net">HTML5 UP</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</footer>
+				</div>
+
+			</div>
+
+		<!-- Scripts -->
+
+			<script src="static/front_page/assets/js/jquery.min.js"></script>
+			<script src="static/front_page/assets/js/jquery.dropotron.min.js"></script>
+			<script src="static/front_page/assets/js/browser.min.js"></script>
+			<script src="static/front_page/assets/js/breakpoints.min.js"></script>
+			<script src="static/front_page/assets/js/util.js"></script>
+			<script src="static/front_page/assets/js/main.js"></script>
+
+	</body>
+</html>
