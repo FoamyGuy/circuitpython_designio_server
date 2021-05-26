@@ -52,6 +52,7 @@ import displayio
 
 from displayio import Group, OnDiskBitmap
 
+# set the name of your signature feed
 SIGNATURE_FEED = "designio.image-signature"
 
 
