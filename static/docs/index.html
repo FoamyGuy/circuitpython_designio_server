@@ -79,13 +79,214 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            
+            <li class="nav-item" data-level="1"><a href="#usage" class="nav-link">Usage</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
         </ul>
     </div>
 </div></div>
                     <div class="col-md-9" role="main">
 
 <h1 id="designio">Designio</h1>
-<p>Designio allows you to create designs and POST them to adafruit.io in order to show them on a waiting CircuitPython device.</p></div>
+<p>Designio allows you to create designs and POST them to adafruit.io in order to show them on a waiting CircuitPython device.</p>
+<h1 id="usage">Usage</h1>
+<p>Designio is currently optimized for the FunHouse device. The code.py below is made to work with FunHouse and the default design size is 240x240 to match the screen.</p>
+<h3 id="bootpy">boot.py</h3>
+<p>The code.py assumes the CIRCUITPY drive is mounted as writeable for the code (and not for the PC).</p>
+<pre><code class="language-python">&quot;&quot;&quot;CircuitPython Essentials Storage logging boot.py file&quot;&quot;&quot;
+import board
+import digitalio
+import storage
+
+switch = digitalio.DigitalInOut(board.BUTTON_UP)
+
+switch.direction = digitalio.Direction.INPUT
+switch.pull = digitalio.Pull.DOWN
+
+print(&quot;UP btn val: {}&quot;.format(switch.value))
+
+# If the switch pin is connected to ground CircuitPython can write to the drive
+storage.remount(&quot;/&quot;, switch.value)
+</code></pre>
+<p>This boot.py file will read the value of the UP button pin and make the drive writable to PC if the button is pressed during bootup.</p>
+<h3 id="codepy">code.py</h3>
+<p>You'll need to also add a <code>secrets.py</code> file on your device with WIFI network credentials as well as Adafruit.io keys</p>
+<pre><code class="language-python"># SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+# SPDX-License-Identifier: MIT
+import time
+from random import randint
+import board
+import ssl
+import socketpool
+import wifi
+import gc
+import adafruit_minimqtt.adafruit_minimqtt as MQTT
+from adafruit_io.adafruit_io import IO_MQTT
+import json
+import adafruit_requests as requests
+import os
+import displayio
+
+from displayio import Group, OnDiskBitmap
+
+SIGNATURE_FEED = &quot;designio.image-signature&quot;
+
+
+### WiFi ###
+
+# Add a secrets.py to your filesystem that has a dictionary called secrets with &quot;ssid&quot; and
+# &quot;password&quot; keys with your WiFi credentials. DO NOT share that file or commit it into Git or other
+# source control.
+# pylint: disable=no-name-in-module,wrong-import-order
+try:
+    from secrets import secrets
+except ImportError:
+    print(&quot;WiFi secrets are kept in secrets.py, please add them there!&quot;)
+    raise
+
+# Set your Adafruit IO Username and Key in secrets.py
+# (visit io.adafruit.com if you need to create an account,
+# or if you need your Adafruit IO key.)
+aio_username = secrets[&quot;aio_username&quot;]
+aio_key = secrets[&quot;aio_key&quot;]
+
+print(&quot;Connecting to %s&quot; % secrets[&quot;ssid&quot;])
+wifi.radio.connect(secrets[&quot;ssid&quot;], secrets[&quot;password&quot;])
+print(&quot;Connected to %s!&quot; % secrets[&quot;ssid&quot;])
+
+
+
+# Define callback functions which will be called when certain events happen.
+# pylint: disable=unused-argument
+def connected(client):
+    # Connected function will be called when the client is connected to Adafruit IO.
+    # This is a good place to subscribe to feed changes.  The client parameter
+    # passed to this function is the Adafruit IO MQTT client so you can make
+    # calls against it easily.
+    print(&quot;Connected to Adafruit IO!  Listening for DemoFeed changes...&quot;)
+    # Subscribe to changes on a feed named DemoFeed.
+    client.subscribe(SIGNATURE_FEED)
+
+
+def subscribe(client, userdata, topic, granted_qos):
+    # This method is called when the client subscribes to a new feed.
+    print(&quot;Subscribed to {0} with QOS level {1}&quot;.format(topic, granted_qos))
+
+
+def unsubscribe(client, userdata, topic, pid):
+    # This method is called when the client unsubscribes from a feed.
+    print(&quot;Unsubscribed from {0} with PID {1}&quot;.format(topic, pid))
+
+
+# pylint: disable=unused-argument
+def disconnected(client):
+    # Disconnected function will be called when the client disconnects.
+    print(&quot;Disconnected from Adafruit IO!&quot;)
+
+
+# pylint: disable=unused-argument
+def message(client, feed_id, payload):
+    # Message function will be called when a subscribed feed has a new value.
+    # The feed_id parameter identifies the feed, and the payload parameter has
+    # the new value.
+    #print(&quot;Feed {0} received new value&quot;.format(feed_id))
+    print(&quot;Feed {0} received new value: {1}&quot;.format(feed_id, payload))
+    payload_obj = json.loads(payload)
+    print(payload_obj['url'])
+    f = open(&quot;/new_plan.json&quot;, &quot;w&quot;)
+    f.write(payload)
+    f.close()
+    f = open(&quot;/new_plan.json&quot;)
+    new_plan_json = json.loads(f.read())
+    f.close()
+    if local_md5 != new_plan_json[&quot;md5&quot;]:
+        print(&quot;downloading image&quot;)
+        image_response = https.get(new_plan_json['url'])
+        f = open(&quot;plan_image.bmp&quot;, &quot;wb&quot;)
+        f.write(image_response.content)
+        f.close()
+        print(&quot;download complete&quot;)
+        gc.collect()
+        print(&quot;update background&quot;)
+        set_background(&quot;plan_image.bmp&quot;)
+
+def set_background(image_file):
+    if image_file in os.listdir(&quot;/&quot;):
+        print(&quot;requested background exists&quot;)
+        try:
+            bitmap_file = open(&quot;/{}&quot;.format(image_file), &quot;rb&quot;)
+            odb = displayio.OnDiskBitmap(bitmap_file)
+
+            #bitmap, palette = adafruit_imageload.load(&quot;/{}&quot;.format(image_file),
+            #                                 bitmap=displayio.Bitmap,
+            #                                 palette=displayio.Palette)
+
+            # Create a TileGrid to hold the bitmap
+            tile_grid = displayio.TileGrid(odb, pixel_shader=displayio.ColorConverter())
+            while len(main_group) &gt; 0:
+                main_group.pop(0)
+            main_group.append(tile_grid)
+        except ValueError as e:
+            print(e)
+
+
+main_group = Group()
+board.DISPLAY.show(main_group)
+
+local_md5 = &quot;&quot;
+if &quot;plan.json&quot; in os.listdir(&quot;/&quot;):
+    f = open(&quot;/plan.json&quot;)
+    plan_json = json.loads(f.read())
+    f.close()
+
+    local_md5 = plan_json[&quot;md5&quot;]
+    set_background(&quot;plan_image.bmp&quot;)
+
+if &quot;plan_image.bmp&quot; in os.listdir(&quot;/&quot;):
+    set_background(&quot;plan_image.bmp&quot;)
+
+
+# Create a socket pool
+pool = socketpool.SocketPool(wifi.radio)
+https = requests.Session(pool, ssl.create_default_context())
+
+
+# Initialize a new MQTT Client object
+mqtt_client = MQTT.MQTT(
+    broker=&quot;io.adafruit.com&quot;,
+    username=secrets[&quot;aio_username&quot;],
+    password=secrets[&quot;aio_key&quot;],
+    socket_pool=pool,
+    ssl_context=ssl.create_default_context(),
+)
+
+# Initialize an Adafruit IO MQTT Client
+io = IO_MQTT(mqtt_client)
+
+# Connect the callback methods defined above to Adafruit IO
+io.on_connect = connected
+io.on_disconnect = disconnected
+io.on_subscribe = subscribe
+io.on_unsubscribe = unsubscribe
+io.on_message = message
+
+# Connect to Adafruit IO
+print(&quot;Connecting to Adafruit IO...&quot;)
+io.connect()
+
+
+
+# Below is an example of manually publishing a new  value to Adafruit IO.
+last = 0
+print(&quot;Listening for messages on image-signature feed...&quot;)
+while True:
+    # Explicitly pump the message loop.
+    io.loop()
+    time.sleep(0.5)
+</code></pre>
+<p>More docs to come...</p></div>
             </div>
         </div>
 
@@ -169,5 +370,5 @@
 
 <!--
 MkDocs version : 1.1.2
-Build Date UTC : 2021-05-23 14:24:00.331346+00:00
+Build Date UTC : 2021-05-26 01:08:16.145172+00:00
 -->
