@@ -28,3 +28,12 @@ class Design(models.Model):
             return "{} - {}".format(self.user.username, self.name)
         else:
             return self.name
+
+
+class UserDefaultWebhooks(models.Model):
+    user = models.ForeignKey(User, on_delete=CASCADE)
+    image_webhook_url = models.CharField("Image Webhook", max_length=128, blank=True, null=True)
+    signature_webhook_url = models.CharField("Signature Webhook", max_length=128, blank=True, null=True)
+
+    def __str__(self):
+        return self.user.username

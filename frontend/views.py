@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.views import View
 
-from backend.models import Design
+from backend.models import Design, UserDefaultWebhooks
 from circuitpython_designio_server.settings import ALLOWED_HOSTS, PORT, PROTOCOL
 
 
@@ -17,7 +17,14 @@ class IndexView(View):
 
 class UserProfileView(View):
     def get(self, request):
-        return render(request, "frontend/user/profile.html", {})
+        try:
+            user_webhooks = UserDefaultWebhooks.objects.get(user=request.user)
+        except UserDefaultWebhooks.DoesNotExist:
+            user_webhooks = {
+                "image_webhook_url": "",
+                "signature_webhook_url": ""
+            }
+        return render(request, "frontend/user/profile.html", {"user_webhooks": user_webhooks})
 
 # class LoginView(View):
 #     def get(self, request):

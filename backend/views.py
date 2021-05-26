@@ -16,7 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets
 
 from circuitpython_designio_server.settings import MEDIA_ROOT, ALLOWED_HOSTS, PORT_STR, PROTOCOL
-from .models import Design
+from .models import Design, UserDefaultWebhooks
 from .serializer import DesignSerializer
 from django.core.files.base import ContentFile, File
 from PIL import Image
@@ -55,6 +55,16 @@ class CreateDesignView(View):
         new_design.content_image.save('temp.bmp', File(blob), save=True)
         new_design.user = request.user
 
+        try:
+            user_webhooks = UserDefaultWebhooks.objects.get(user=request.user)
+            new_design.aio_webhook_image = user_webhooks.image_webhook_url
+            new_design.aio_webhook_signature = user_webhooks.signature_webhook_url
+
+            process_aio_hooks(new_design)
+
+        except UserDefaultWebhooks.DoesNotExist:
+            pass
+
         new_design.content_json = json_data
 
         new_design.save()
@@ -62,6 +72,23 @@ class CreateDesignView(View):
             "success": True,
             "view_design_url": reverse("frontend:design_uuid", kwargs={"design_uuid": new_design.uuid})
         })
+
+
+class UpdateUserWebhooksView(View):
+    def post(self, request):
+        try:
+            user_webhooks = UserDefaultWebhooks.objects.get(user=request.user)
+        except UserDefaultWebhooks.DoesNotExist:
+            user_webhooks = UserDefaultWebhooks(user=request.user)
+
+        image_webhook_url = request.POST.get("preview_webhook")
+        signature_webhook_url = request.POST.get("signature_webhook")
+
+        user_webhooks.signature_webhook_url = signature_webhook_url
+        user_webhooks.image_webhook_url = image_webhook_url
+
+        user_webhooks.save()
+        return JsonResponse({"success": True})
 
 
 class UpdateDesignWebhooksView(View):
@@ -77,6 +104,16 @@ class UpdateDesignWebhooksView(View):
         design.aio_webhook_signature = signature_webhook_url
         design.aio_webhook_image = preview_webhook_url
         design.save()
+        return JsonResponse({"success": True})
+
+class DeleteDesignView(View):
+    def post(self, request, design_uuid):
+        try:
+            design = Design.objects.get(uuid=design_uuid, user=request.user)
+        except Design.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Design not found"})
+
+        design.delete()
         return JsonResponse({"success": True})
 
 class UpdateDesignView(View):

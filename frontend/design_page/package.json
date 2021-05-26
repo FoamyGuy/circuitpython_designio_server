@@ -7,12 +7,11 @@
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
     "jquery": "^3.6.0",
-    "polotno": "^0.18.10",
+    "lodash": "^4.17.21",
+    "polotno": "^0.19.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
-    "react-toastr": "^3.0.0",
-    "toastr": "^2.1.4",
     "web-vitals": "^1.1.1"
   },
   "scripts": {
@@ -39,9 +38,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "@pnotify/bootstrap3": "^5.2.0",
-    "@pnotify/core": "^5.2.0",
-    "@pnotify/mobile": "^5.2.0"
-  }
+  "devDependencies": {}
 }
