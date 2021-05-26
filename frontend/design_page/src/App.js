@@ -14,10 +14,15 @@ import {SidePanel, DEFAULT_SECTIONS} from 'polotno/side-panel/side-panel';
 import {SectionTab} from "polotno/side-panel/tab-button";
 import React from "react";
 import MdPhotoLibrary from "@meronex/icons/md/MdPhotoLibrary";
-import {Icon} from '@blueprintjs/core';
+import {Icon, Position, Toaster, Intent} from '@blueprintjs/core';
+import _ from "lodash";
 
 
 class App extends React.Component {
+    refHandlers = {
+        toaster: (ref) => this.toaster = ref,
+    };
+
     constructor(props) {
         super(props);
         console.log('starting the app...');
@@ -25,13 +30,14 @@ class App extends React.Component {
         this.store = createStore({
             key: polotno_key, // you can create it here: https://polotno.dev/cabinet/
         });
-        this.store.setSize(320, 240);
+        this.store.setSize(240, 240);
 
         this.state = {
             feedback: "Design Saved",
             feedbackIntent: "success",
             feedbackHidden: true,
             webhookDialogOpen: false,
+            savedDesignJson: {},
         }
         this.creating = true;
 
@@ -51,9 +57,8 @@ class App extends React.Component {
         $.ajaxSetup({
             beforeSend: (xhr, settings) => {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    https://www.youtube.com/watch?v=nDqaTXqCN-Q
-                        // Only send the token to relative URLs i.e. locally.
-                        console.log("ajax setup");
+                    // Only send the token to relative URLs i.e. locally.
+                    console.log("ajax setup");
                     xhr.setRequestHeader("X-CSRFToken", this.getCookie('csrftoken'));
                 }
             }
@@ -74,13 +79,14 @@ class App extends React.Component {
             console.dir(this.store.pages);
             console.log(this.store.activePage.id);
             $("#name_input").val(this.input_data.data.name);
-
+            this.setState({savedDesignJson: this.store.toJSON()});
 
 
         } else {
             this.creating = true;
             // empty page if nothing to load
             this.store.addPage();
+            this.setState({savedDesignJson: this.store.toJSON()});
         }
 
 
@@ -120,6 +126,20 @@ class App extends React.Component {
             </SectionTab>
         );
 
+        $(window).on("beforeunload", () => {
+            console.log("state in beforeunload");
+            console.dir(this.state.savedDesignJson);
+            console.log("----")
+            console.dir(this.store.toJSON());
+            console.log("json has changed ? " + !_.isEqual(this.state.savedDesignJson, this.store.toJSON()));
+            console.log("history");
+            console.log(this.store.history.canUndo);
+            if (!_.isEqual(this.state.savedDesignJson, this.store.toJSON())) {
+                return "Are you sure to leave? There is unsaved worked.";
+            }
+        });
+
+
         //removeSection(sections, "size");
         //addSection(sections, ResizePanel, 5);
 
@@ -131,6 +151,11 @@ class App extends React.Component {
         console.log(this.input_data)
         return (
             <React.Fragment>
+                <Toaster
+                    position={Position.TOP}
+                    ref={this.refHandlers.toaster}
+                    intent={Intent.DANGER}
+                />
                 <WebhooksDialog
                     isOpen={this.state.webhookDialogOpen}
                     saveWebhooksClick={this.saveWebhooksClick}
@@ -170,7 +195,7 @@ class App extends React.Component {
                         }}
                     >
                         <Toolbar store={this.store} downloadButtonEnabled={true}/>
-                        <Workspace store={this.store}/>
+                        <Workspace store={this.store} pageControlsEnabled={false}/>
                         <ZoomButtons store={this.store}/>
                     </div>
                 </div>
@@ -199,18 +224,18 @@ class App extends React.Component {
         console.log($("#preview_webhook_input").val());
         console.log($("#signature_webhook_input").val());
         $.ajax({
-                method: "POST",
-                url: "/update/design/" + this.input_data.data.id + "/webhooks/",
-                data: {
-                    "preview_webhook": $("#preview_webhook_input").val(),
-                    "signature_webhook": $("#signature_webhook_input").val()
-                }
-            }).done((resp) => {
-                this.input_data.data["preview_webhook_url"] = $("#preview_webhook_input").val();
-                this.input_data.data["signature_webhook_url"] = $("#signature_webhook_input").val();
-                console.log(resp);
+            method: "POST",
+            url: "/update/design/" + this.input_data.data.id + "/webhooks/",
+            data: {
+                "preview_webhook": $("#preview_webhook_input").val(),
+                "signature_webhook": $("#signature_webhook_input").val()
+            }
+        }).done((resp) => {
+            this.input_data.data["preview_webhook_url"] = $("#preview_webhook_input").val();
+            this.input_data.data["signature_webhook_url"] = $("#signature_webhook_input").val();
+            console.log(resp);
 
-            });
+        });
     }
 
     handleWebhooksDialogClose = () => {
@@ -234,54 +259,79 @@ class App extends React.Component {
         //console.log(store.toJSON());
         //console.log(store.toDataURL());
 
-        // create new design
-        if (this.input_data === undefined || !this.input_data.data.hasOwnProperty("id")) {
-            //this.topBar.current.setState({"hidden": false, "feedback": "Hello World", "feedbackIntent": "danger"});
-            //this.setState({hidden: false})
-            $.ajax({
-                method: "POST",
-                url: "/create_design/",
-                data: {
-                    "image_base64": this.store.toDataURL(),
-                    "json": JSON.stringify(this.store.toJSON()),
-                    "name": $("#name_input").val()
-                }
-            }).done((resp) => {
-                this.setState({
-                    feedbackHidden: false,
-                    feedbackIntent: "success",
-                    feedback: "Design created successfully"
+        if ($("#name_input").val() !== "") {
+            // create new design
+            if (this.input_data === undefined || !this.input_data.data.hasOwnProperty("id")) {
+                //this.topBar.current.setState({"hidden": false, "feedback": "Hello World", "feedbackIntent": "danger"});
+                //this.setState({hidden: false})
+                $.ajax({
+                    method: "POST",
+                    url: "/create_design/",
+                    data: {
+                        "image_base64": this.store.toDataURL(),
+                        "json": JSON.stringify(this.store.toJSON()),
+                        "name": $("#name_input").val()
+                    }
+                }).done((resp) => {
+
+                    this.setState({
+                        feedbackHidden: false,
+                        feedbackIntent: "success",
+                        feedback: "Design created successfully",
+                        savedDesignJson: this.store.toJSON()
+                    });
+                    setTimeout(() => {
+                        this.setState({feedbackHidden: true});
+                        window.location = resp['view_design_url']
+                    }, 3000);
+                    console.log(resp);
+                }).fail((error) => {
+                    this.setState({
+                        feedbackHidden: false,
+                        feedbackIntent: "danger",
+                        feedback: error.responseJSON.error
+                    });
                 });
-                setTimeout(() => {
-                    this.setState({feedbackHidden: true});
-                    window.location = resp['view_design_url']
-                }, 3000);
-                console.log(resp);
-            }).fail((error) => {
-                this.setState({feedbackHidden: false, feedbackIntent: "danger", feedback: error.responseJSON.error});
-            });
+            } else {
+                // update existing design
+                $.ajax({
+                    method: "POST",
+                    url: "/update/design/" + this.input_data.data.id + "/",
+                    data: {
+                        "image_base64": this.store.toDataURL(),
+                        "json": JSON.stringify(this.store.toJSON()),
+                        "name": $("#name_input").val()
+                    }
+                }).done((resp) => {
+                    this.setState({
+                        feedbackHidden: false,
+                        feedbackIntent: "success",
+                        feedback: "Design saved successfully"
+                    });
+                    console.log(resp);
+                    setTimeout(() => {
+                        this.setState({feedbackHidden: true});
+                    }, 3000);
+                });
+            }
         } else {
-            // update existing design
-            $.ajax({
-                method: "POST",
-                url: "/update/design/" + this.input_data.data.id + "/",
-                data: {
-                    "image_base64": this.store.toDataURL(),
-                    "json": JSON.stringify(this.store.toJSON()),
-                    "name": $("#name_input").val()
-                }
-            }).done((resp) => {
-                this.setState({
-                    feedbackHidden: false,
-                    feedbackIntent: "success",
-                    feedback: "Design saved successfully"
-                });
-                console.log(resp);
-                setTimeout(() => {
-                    this.setState({feedbackHidden: true});
-                }, 3000);
+            this.setState({
+                feedbackHidden: false,
+                feedbackIntent: "danger",
+                feedback: "Design Name cannot be blank"
             });
+            setTimeout(() => {
+                this.setState({feedbackHidden: true});
+            }, 3000);
+
+            // this.toaster.show({
+            //     message: "Name Cannot be Empty",
+            //     intent: Intent.DANGER,
+            // });
+
+            console.log("please fill in name");
         }
+
     }
 
     clickSaveAIO = () => {

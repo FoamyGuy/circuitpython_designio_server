@@ -82,11 +82,20 @@ class TopBar extends React.Component {
 
                     {this.props.showAIOButton &&
                     <Button
+                        minimal
                         icon={"cloud-upload"}
                         onClick={this.props.showWebhookDialogClick}
                     >
                         Setup Adafruit.io Webhooks
                     </Button>}
+
+                    <AnchorButton
+                        minimal
+                        href="/list/designs/"
+                        icon={"layout-grid"}
+                    >
+                        My Designs
+                    </AnchorButton>
 
                     <AnchorButton
                         minimal
