@@ -38,7 +38,7 @@
                  data-design-uuid="{{ design.uuid }}"
                  data-design-name="{{ design.name }}"
               ></i>
-              <a href="{{ design.view_url }}" class="image featured"><img src="/media/{{ design.content_image.name }}"
+              <a href="{{ design.view_url }}" class="image featured"><img src="/media/{{ design.content_image.name }}?t={% now "U" %}"
                                                                           alt=""/></a>
 
               <div style="">
