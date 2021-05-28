@@ -306,7 +306,8 @@ class App extends React.Component {
                     this.setState({
                         feedbackHidden: false,
                         feedbackIntent: "success",
-                        feedback: "Design saved successfully"
+                        feedback: "Design saved successfully",
+                        savedDesignJson: this.store.toJSON()
                     });
                     console.log(resp);
                     setTimeout(() => {
@@ -324,12 +325,6 @@ class App extends React.Component {
                 this.setState({feedbackHidden: true});
             }, 3000);
 
-            // this.toaster.show({
-            //     message: "Name Cannot be Empty",
-            //     intent: Intent.DANGER,
-            // });
-
-            console.log("please fill in name");
         }
 
     }
