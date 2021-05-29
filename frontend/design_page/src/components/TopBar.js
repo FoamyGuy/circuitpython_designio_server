@@ -98,6 +98,15 @@ class TopBar extends React.Component {
                     </AnchorButton>
 
                     <AnchorButton
+                        icon="download"
+                        minimal
+                        href={"/media/content/" + this.props.image_file + "?t=" + new Date().getTime()}
+                    >
+                        Download BMP
+                    </AnchorButton>
+
+
+                    <AnchorButton
                         minimal
                         href="/docs/"
                         target="_blank"

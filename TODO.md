@@ -13,7 +13,11 @@
 - [ ] change html title
 - [ ] name the bmp file after the design name
 - [ ] resize panel to have relevant sizes
-- [ ] Disallow empty name
+- [x] Disallow empty name
+- [x] save needs to refresh cached json for leaving prompt
+- [x] download bmp button
+- [ ] guest designs?
+- [x] cache busting my designs grid
 - [ ] 
 
 

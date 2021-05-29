@@ -172,6 +172,7 @@ class App extends React.Component {
                         codepyHidden={this.creating}
                         showWebhookDialogClick={this.showWebhookDialog}
                         uuid={!this.creating ? this.input_data.data.uuid : ""}
+                        image_file={this.input_data ? this.input_data.data.image_file : ""}
                         showAIOButton={!this.creating}
                 />
                 <div
@@ -194,7 +195,7 @@ class App extends React.Component {
                             position: 'relative',
                         }}
                     >
-                        <Toolbar store={this.store} downloadButtonEnabled={true}/>
+                        <Toolbar store={this.store} downloadButtonEnabled={false}/>
                         <Workspace store={this.store} pageControlsEnabled={false}/>
                         <ZoomButtons store={this.store}/>
                     </div>
@@ -306,7 +307,8 @@ class App extends React.Component {
                     this.setState({
                         feedbackHidden: false,
                         feedbackIntent: "success",
-                        feedback: "Design saved successfully"
+                        feedback: "Design saved successfully",
+                        savedDesignJson: this.store.toJSON()
                     });
                     console.log(resp);
                     setTimeout(() => {
@@ -324,12 +326,6 @@ class App extends React.Component {
                 this.setState({feedbackHidden: true});
             }, 3000);
 
-            // this.toaster.show({
-            //     message: "Name Cannot be Empty",
-            //     intent: Intent.DANGER,
-            // });
-
-            console.log("please fill in name");
         }
 
     }
