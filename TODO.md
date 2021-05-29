@@ -15,9 +15,9 @@
 - [ ] resize panel to have relevant sizes
 - [x] Disallow empty name
 - [x] save needs to refresh cached json for leaving prompt
-- [ ] download bmp button
+- [x] download bmp button
 - [ ] guest designs?
-- [ ] cache busting my designs grid
+- [x] cache busting my designs grid
 - [ ] 
 
 

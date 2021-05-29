@@ -15,6 +15,7 @@ class IndexView(View):
     def get(self, request):
         return render(request, "frontend/front_page/index.html", {})
 
+
 class UserProfileView(View):
     def get(self, request):
         try:
@@ -26,6 +27,7 @@ class UserProfileView(View):
             }
         return render(request, "frontend/user/profile.html", {"user_webhooks": user_webhooks})
 
+
 # class LoginView(View):
 #     def get(self, request):
 #         return render(request, "frontend/user/login.html", {})
@@ -34,6 +36,7 @@ class UserProfileView(View):
 class DocsView(View):
     def get(self, request):
         return redirect("/static/docs/index.html")
+
 
 class CreateDesignView(View):
     def get(self, request):
@@ -47,14 +50,18 @@ class ViewDesignView(View):
         except Design.DoesNotExist:
             return HttpResponse("Design Not Found")
 
-        return render(request, 'frontend/polotno_designer.html',
-                      {"context_data": json.dumps({"id": design_obj.id, "design_json": design_obj.content_json})})
+        return render(request, 'frontend/polotno_designer.html', {
+            "context_data": json.dumps({
+                "id": design_obj.id,
+                "design_json": design_obj.content_json,
+                "image_file": design_obj.content_image.file.name
+            })})
 
 
 class ListDesignsView(View):
     def get(self, request):
         user_designs = Design.objects.filter(user=request.user).order_by("-id")
-        design_rows = [user_designs[i:i+4] for i in range(0, len(user_designs), 4)]
+        design_rows = [user_designs[i:i + 4] for i in range(0, len(user_designs), 4)]
         return render(request, 'frontend/list_designs.html', {"design_rows": design_rows})
 
 
@@ -72,6 +79,7 @@ class ViewDesignUUIDView(View):
                            "name": design_obj.name,
                            "preview_webhook_url": design_obj.aio_webhook_image,
                            "signature_webhook_url": design_obj.aio_webhook_signature,
+                           "image_file": design_obj.content_image.file.name.split("/")[-1],
                            "design_json": design_obj.content_json})})
 
 
