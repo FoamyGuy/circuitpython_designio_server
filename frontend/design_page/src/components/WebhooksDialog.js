@@ -32,21 +32,6 @@ class WebhooksDialog extends React.Component {
          return {
                 isOpen: props.isOpen,
             }
-
-        // console.log("updating state from props");
-        // console.log(state.imageWebhook === "");
-        // if (state.imageWebhook === "") {
-        //     console.log("updating hooks too");
-        //     return {
-        //         isOpen: props.isOpen,
-        //         imageWebhook: props.preview_webhook_url,
-        //         signatureWebhook: props.signature_webhook_url
-        //     };
-        // }else{
-        //     return {
-        //         isOpen: props.isOpen,
-        //     }
-        // }
     }
 
     handleChangeSignatureWebhook(event) {
@@ -75,39 +60,12 @@ class WebhooksDialog extends React.Component {
     }
 
     componentDidMount() {
-        // setTimeout(() => {
-        //     console.log("setting webhook inputs:");
-        //     console.log(this.props.signature_webhook_url);
-        //     console.log(this.props.preview_webhook_url);
-        //     $("#preview_webhook_input").val(this.props.preview_webhook_url);
-        //     $("#signature_webhook_input").val(this.props.signature_webhook_url);
-        //
-        //     console.log("after set val ");
-        //     console.log($("#preview_webhook_input").val());
-        //     setInterval(() => {
-        //         console.log($("#preview_webhook_input").val());
-        //     }, 500);
-        // }, 0);
 
     }
 
     render() {
         console.log("url : " + this.state.imageWebhook);
-        // setTimeout(() => {
-        //     console.log("setting webhook inputs:");
-        //     console.log(this.props.signature_webhook_url);
-        //     console.log(this.props.preview_webhook_url);
-        //     $("#preview_webhook_input").val(this.props.preview_webhook_url);
-        //     $("#signature_webhook_input").val(this.props.signature_webhook_url);
-        //
-        //     console.log("after set val ");
-        //     console.log($("#preview_webhook_input").val());
-        //     setInterval(() => {
-        //         console.log($("#preview_webhook_input").val());
-        //     }, 500);
-        //
-        // }, 300);
-        //
+
         return (
             <Dialog
                 className={""}
