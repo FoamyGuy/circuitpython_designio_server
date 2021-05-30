@@ -6,135 +6,140 @@
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 <html>
-	<head>
-		<title>Verti by HTML5 UP</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="static/front_page/assets/css/main.css" />
-	</head>
-	<body class="is-preload homepage">
-		<div id="page-wrapper">
+<head>
+  <title>Designio</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+  <link rel="stylesheet" href="static/front_page/assets/css/main.css"/>
+</head>
+<body class="is-preload homepage">
+<div id="page-wrapper">
 
-			<!-- Header -->
-				<div id="header-wrapper">
-					<header id="header" class="container">
+  <!-- Header -->
+  <div id="header-wrapper">
+    <header id="header" class="container">
 
-						<!-- Logo -->
-							<div id="logo">
-								<h1><a href="/">Designio</a></h1>
-{#								<span>by HTML5 UP</span>#}
-							</div>
+      <!-- Logo -->
+      <div id="logo">
+        <h1><a href="/">Designio</a></h1>
+        {#								<span>by HTML5 UP</span>#}
+      </div>
 
-						<!-- Nav -->
-							<nav id="nav">
-								<ul>
+      <!-- Nav -->
+      <nav id="nav">
+        <ul>
 
-{#									<li class="current"><a href="index.html">Welcome</a></li>#}
-{#									<li>#}
-{#										<a href="#">Dropdown</a>#}
-{#										<ul>#}
-{#											<li><a href="#">Lorem ipsum dolor</a></li>#}
-{#											<li><a href="#">Magna phasellus</a></li>#}
-{#											<li>#}
-{#												<a href="#">Phasellus consequat</a>#}
-{#												<ul>#}
-{#													<li><a href="#">Lorem ipsum dolor</a></li>#}
-{#													<li><a href="#">Phasellus consequat</a></li>#}
-{#													<li><a href="#">Magna phasellus</a></li>#}
-{#													<li><a href="#">Etiam dolore nisl</a></li>#}
-{#												</ul>#}
-{#											</li>#}
-{#											<li><a href="#">Veroeros feugiat</a></li>#}
-{#										</ul>#}
-{#									</li>#}
-{#									<li><a href="left-sidebar.html">Left Sidebar</a></li>#}
-{#									<li><a href="right-sidebar.html">Right Sidebar</a></li>#}
-									{% if user.is_authenticated %}
-                    <li><a href="/create/design/"><i class="fa fa-plus"></i>New Design</a></li>
-                    <li><a href="/list/designs/">My Designs</a></li>
-                    <li><a href="/accounts/profile/">Profile</a></li>
-                  {% else %}
-                    <li><a href="/accounts/login/">Login</a></li>
-                  {% endif %}
-								</ul>
-							</nav>
+          {#									<li class="current"><a href="index.html">Welcome</a></li>#}
+          {#									<li>#}
+          {#										<a href="#">Dropdown</a>#}
+          {#										<ul>#}
+          {#											<li><a href="#">Lorem ipsum dolor</a></li>#}
+          {#											<li><a href="#">Magna phasellus</a></li>#}
+          {#											<li>#}
+          {#												<a href="#">Phasellus consequat</a>#}
+          {#												<ul>#}
+          {#													<li><a href="#">Lorem ipsum dolor</a></li>#}
+          {#													<li><a href="#">Phasellus consequat</a></li>#}
+          {#													<li><a href="#">Magna phasellus</a></li>#}
+          {#													<li><a href="#">Etiam dolore nisl</a></li>#}
+          {#												</ul>#}
+          {#											</li>#}
+          {#											<li><a href="#">Veroeros feugiat</a></li>#}
+          {#										</ul>#}
+          {#									</li>#}
+          {#									<li><a href="left-sidebar.html">Left Sidebar</a></li>#}
+          {#									<li><a href="right-sidebar.html">Right Sidebar</a></li>#}
+          {% if user.is_authenticated %}
+            <li><a href="/create/design/"><i class="fa fa-plus"></i>New Design</a></li>
+            <li><a href="/list/designs/">My Designs</a></li>
+            <li><a href="/accounts/profile/">Profile</a></li>
+            <li><a href="/accounts/logout/">Logout</a></li>
+          {% else %}
+            <li><a href="/accounts/login/">Login</a></li>
+          {% endif %}
+        </ul>
+      </nav>
 
-					</header>
-				</div>
+    </header>
+  </div>
 
-			<!-- Banner -->
-				<div id="banner-wrapper">
-					<div id="banner" class="box container">
-						<div class="row">
-							<div class="col-7 col-12-medium">
-								<h2>Designio</h2>
-								<p>The CircuitPython screen design and management tool.</p>
-							</div>
-							<div class="col-5 col-12-medium">
-								<ul>
-									<li><a href="{% url 'frontend:create_design' %}" class="button large icon solid fa-arrow-circle-right">Ok let's go</a></li>
-									<li><a href="/docs/" class="button alt large icon solid fa-question-circle">More info</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
+  <!-- Banner -->
+  <div id="banner-wrapper">
+    <div id="banner" class="box container">
+      <div class="row">
+        <div class="col-7 col-12-medium">
+          <h2>Designio</h2>
+          <p>The CircuitPython screen design and management tool.</p>
+        </div>
+        <div class="col-5 col-12-medium">
+          <ul>
+            <li><a href="{% url 'frontend:create_design' %}" class="button large icon solid fa-arrow-circle-right">
+              Design</a></li>
+            <li><a href="/docs/" class="button alt large icon solid fa-question-circle">More info</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 
-			<!-- Features -->
-				<div id="features-wrapper">
-					<div class="container">
-						<div class="row">
-							<div class="col-4 col-12-medium">
+  <!-- Features -->
+  <div id="features-wrapper">
+    <div class="container">
+      <div class="row">
+        <div class="col-4 col-12-medium">
 
-								<!-- Box -->
-									<section class="box feature">
-										<a href="#" class="image featured"><img src="{% static 'front_page/images/editor_sm.png'%}" alt="" /></a>
-										<div class="inner">
-											<header>
-												<h2>Create your design</h2>
-												<p>Use the editor to build awesome images.</p>
-											</header>
-											<p>Select your background color or image. Insert text with custom fonts. Add images from Unsplash and Adafruit emoji friends.</p>
-										</div>
-									</section>
+          <!-- Box -->
+          <section class="box feature">
+            <a href="#" class="image featured"><img src="{% static 'front_page/images/editor_sm.png' %}" alt=""/></a>
+            <div class="inner">
+              <header>
+                <h2>Create your design</h2>
+                <p>Use the editor to build awesome images.</p>
+              </header>
+              <p>Select your background color or image. Insert text with custom fonts. Add images from Unsplash and
+                Adafruit emoji friends.</p>
+            </div>
+          </section>
 
-							</div>
-							<div class="col-4 col-12-medium">
+        </div>
+        <div class="col-4 col-12-medium">
 
-								<!-- Box -->
-									<section class="box feature">
-										<a href="#" class="image featured"><img src="static/front_page/images/pic02.jpg" alt="" /></a>
-										<div class="inner">
-											<header>
-												<h2>Load your code.py</h2>
-												<p>Copy the downloaded file to your device.</p>
-											</header>
-											<p>When the code runs it will download the saved version of your design. It will check every few minutes for new versions.</p>
-										</div>
-									</section>
+          <!-- Box -->
+          <section class="box feature">
+            <a href="#" class="image featured"><img src="static/front_page/images/pic02.jpg" alt=""/></a>
+            <div class="inner">
+              <header>
+                <h2>Load your code.py</h2>
+                <p>Copy the downloaded file to your device.</p>
+              </header>
+              <p>When the code runs it will download the saved version of your design. It will check every few minutes
+                for new versions.</p>
+            </div>
+          </section>
 
-							</div>
-							<div class="col-4 col-12-medium">
+        </div>
+        <div class="col-4 col-12-medium">
 
-								<!-- Box -->
-									<section class="box feature">
-										<a href="#" class="image featured"><img src="static/front_page/images/pic03.jpg" alt="" /></a>
-										<div class="inner">
-											<header>
-												<h2>Update your design</h2>
-												<p>Save changes anytime you want.</p>
-											</header>
-											<p>Use webhooks to allow an Adafruit.io feed to notify your device of a new version so it can be downloaded.</p>
-										</div>
-									</section>
+          <!-- Box -->
+          <section class="box feature">
+            <a href="#" class="image featured"><img src="static/front_page/images/pic03.jpg" alt=""/></a>
+            <div class="inner">
+              <header>
+                <h2>Update your design</h2>
+                <p>Save changes anytime you want.</p>
+              </header>
+              <p>Use webhooks to allow an Adafruit.io feed to notify your device of a new version so it can be
+                downloaded.</p>
+            </div>
+          </section>
 
-							</div>
-						</div>
-					</div>
-				</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-			<!-- Main -->
-				{% comment %}<div id="main-wrapper">
+  <!-- Main -->
+  {% comment %}<div id="main-wrapper">
 					<div class="container">
 						<div class="row gtr-200">
 							<div class="col-4 col-12-medium">
@@ -174,14 +179,14 @@
 					</div>
 				</div>{% endcomment %}
 
-			<!-- Footer -->
-				<div id="footer-wrapper">
-					<footer id="footer" class="container">
-						<div class="row">
-							<div class="col-3 col-6-medium col-12-small">
+  <!-- Footer -->
+  <div id="footer-wrapper">
+    <footer id="footer" class="container">
+      <div class="row">
+        <div class="col-3 col-6-medium col-12-small">
 
-								<!-- Links -->
-									{% comment %}<section class="widget links">
+          <!-- Links -->
+          {% comment %}<section class="widget links">
 										<h3>Random Stuff</h3>
 										<ul class="style2">
 											<li><a href="#">Etiam feugiat condimentum</a></li>
@@ -192,11 +197,11 @@
 										</ul>
 									</section>{% endcomment %}
 
-							</div>
-							<div class="col-3 col-6-medium col-12-small">
+        </div>
+        <div class="col-3 col-6-medium col-12-small">
 
-								<!-- Links -->
-									{% comment %}<section class="widget links">
+          <!-- Links -->
+          {% comment %}<section class="widget links">
 										<h3>Random Stuff</h3>
 										<ul class="style2">
 											<li><a href="#">Etiam feugiat condimentum</a></li>
@@ -207,11 +212,11 @@
 										</ul>
 									</section>{% endcomment %}
 
-							</div>
-							<div class="col-3 col-6-medium col-12-small">
+        </div>
+        <div class="col-3 col-6-medium col-12-small">
 
-								<!-- Links -->
-									{% comment %}<section class="widget links">
+          <!-- Links -->
+          {% comment %}<section class="widget links">
 										<h3>Random Stuff</h3>
 										<ul class="style2">
 											<li><a href="#">Etiam feugiat condimentum</a></li>
@@ -222,45 +227,48 @@
 										</ul>
 									</section>{% endcomment %}
 
-							</div>
-							<div class="col-3 col-6-medium col-12-small">
+        </div>
+        <div class="col-3 col-6-medium col-12-small">
 
-								<!-- Contact -->
-									<section class="widget contact last">
-										<h3>Contact Us</h3>
-										<ul>
-											<li><a href="https://github.com/FoamyGuy/circuitpython_designio_server" class="icon brands fa-github"><span class="label">Github</span></a></li>
-											<li><a href="https://adafru.it/discord" class="icon brands fa-discord"><span class="label">Discord</span></a></li>
-                    </ul>
-										{% comment %}<p>1234 Fictional Road<br />
+          <!-- Contact -->
+          <section class="widget contact last">
+            <h3>Contact Us</h3>
+            <ul>
+              <li><a href="https://github.com/FoamyGuy/circuitpython_designio_server"
+                     class="icon brands fa-github"><span class="label">Github</span></a></li>
+              <li><a href="https://adafru.it/discord" class="icon brands fa-discord"><span class="label">Discord</span></a>
+              </li>
+            </ul>
+            {% comment %}<p>1234 Fictional Road<br />
 										Nashville, TN 00000<br />
 										(800) 555-0000</p>{% endcomment %}
-									</section>
+          </section>
 
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-12">
-								<div id="copyright">
-									<ul class="menu">
-										<li>&copy; Designio. All rights reserved</li><li>Web Template: <a href="http://html5up.net">HTML5 UP</a></li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</footer>
-				</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div id="copyright">
+            <ul class="menu">
+              <li>&copy; Designio. All rights reserved</li>
+              <li>Web Template: <a href="http://html5up.net">HTML5 UP</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
 
-			</div>
+</div>
 
-		<!-- Scripts -->
+<!-- Scripts -->
 
-			<script src="/static/front_page/assets/js/jquery.min.js"></script>
-			<script src="/static/front_page/assets/js/jquery.dropotron.min.js"></script>
-			<script src="/static/front_page/assets/js/browser.min.js"></script>
-			<script src="/static/front_page/assets/js/breakpoints.min.js"></script>
-			<script src="/static/front_page/assets/js/util.js"></script>
-			<script src="/static/front_page/assets/js/main.js"></script>
+<script src="/static/front_page/assets/js/jquery.min.js"></script>
+<script src="/static/front_page/assets/js/jquery.dropotron.min.js"></script>
+<script src="/static/front_page/assets/js/browser.min.js"></script>
+<script src="/static/front_page/assets/js/breakpoints.min.js"></script>
+<script src="/static/front_page/assets/js/util.js"></script>
+<script src="/static/front_page/assets/js/main.js"></script>
 
-	</body>
+</body>
 </html>

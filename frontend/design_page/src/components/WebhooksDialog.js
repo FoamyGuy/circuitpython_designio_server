@@ -5,6 +5,10 @@ import $ from "jquery";
 class WebhooksDialog extends React.Component {
     constructor(props) {
         super(props);
+
+        console.log("props in constructor");
+        console.dir(this.props);
+
         this.state = {
             isOpen: this.props.isOpen,
             autoFocus: true,
@@ -12,16 +16,39 @@ class WebhooksDialog extends React.Component {
             canOutsideClickClose: true,
             enforceFocus: true,
             usePortal: true,
+            imageWebhook: this.props.preview_webhook_url,
+            signatureWebhook: this.props.signature_webhook_url
         }
+        console.log("signature webhook in constructor:");
+        console.log(this.state.signature_webhook_url)
 
+        this.handleChangeSignatureWebhook = this.handleChangeSignatureWebhook.bind(this);
+        this.handleChangeImageWebhook = this.handleChangeImageWebhook.bind(this);
 
     }
 
 
     static getDerivedStateFromProps = (props, state) => {
-        console.log("updating state from props");
-        return {isOpen: props.isOpen};
+         return {
+                isOpen: props.isOpen,
+            }
     }
+
+    handleChangeSignatureWebhook(event) {
+        this.setState({
+                signatureWebhook: event.target.value
+            }
+        )
+    };
+
+    handleChangeImageWebhook(event) {
+        console.log("setting image webhook");
+        console.log(event.target.value);
+        this.setState({
+                imageWebhook: event.target.value
+            }
+        )
+    };
 
     handleOpen = () => this.setState({isOpen: true});
 
@@ -32,13 +59,13 @@ class WebhooksDialog extends React.Component {
         this.props.handleClose();
     }
 
+    componentDidMount() {
+
+    }
+
     render() {
-        console.log("url : " + this.props.preview_webhook_url);
-        setTimeout(() => {
-            $("#preview_webhook_input").val(this.props.preview_webhook_url);
-            $("#signature_webhook_input").val(this.props.signature_webhook_url);
-        }, 200);
-        //
+        console.log("url : " + this.state.imageWebhook);
+
         return (
             <Dialog
                 className={""}
@@ -53,6 +80,8 @@ class WebhooksDialog extends React.Component {
                     </p>
                     <InputGroup
                         id={"preview_webhook_input"}
+                        value={this.state.imageWebhook}
+                        onChange={this.handleChangeImageWebhook}
                     />
                     <br/>
                     <p>
@@ -60,6 +89,8 @@ class WebhooksDialog extends React.Component {
                     </p>
                     <InputGroup
                         id={"signature_webhook_input"}
+                        value={this.state.signatureWebhook}
+                        onChange={this.handleChangeSignatureWebhook}
                     />
                 </div>
                 <div className={Classes.DIALOG_FOOTER}>
@@ -70,8 +101,9 @@ class WebhooksDialog extends React.Component {
                         <Button
                             intent={Intent.SUCCESS}
                             onClick={() => {
+                                this.handleClose();
                                 this.props.saveWebhooksClick();
-                                this.handleClose()
+
                             }}
                         >
                             Save

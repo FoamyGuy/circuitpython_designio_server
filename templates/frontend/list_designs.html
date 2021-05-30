@@ -1,5 +1,7 @@
 {% extends 'empty_base.html' %}
 {% load static %}
+
+{% block title %}Designio{% endblock %}
 {% block style %}
   <link rel="stylesheet" href="{% static 'front_page/assets/css/micromodal.css' %}"/>
   <style>
@@ -25,6 +27,11 @@
 
 {% endblock %}
 
+{% block nav %}
+  <li><a href="/create/design/"><i class="fa fa-plus"></i>New Design</a></li>
+  <li><a href="/accounts/profile/">Profile</a></li>
+  <li><a href="/accounts/logout/">Logout</a></li>
+{% endblock %}
 {% block content %}
   <div class="container">
     {% for design_row in design_rows %}
@@ -38,8 +45,9 @@
                  data-design-uuid="{{ design.uuid }}"
                  data-design-name="{{ design.name }}"
               ></i>
-              <a href="{{ design.view_url }}" class="image featured"><img src="/media/{{ design.content_image.name }}?t={% now "U" %}"
-                                                                          alt=""/></a>
+              <a href="{{ design.view_url }}" class="image featured"><img
+                  src="/media/{{ design.content_image.name }}?t={% now "U" %}"
+                  alt=""/></a>
 
               <div style="">
                 <header>
@@ -95,7 +103,7 @@
       function delete_design() {
           $.ajax({
               method: "POST",
-              url: "/delete/design/" + deleting_design_uuid + "/",
+              url: "/delete/design/u/" + deleting_design_uuid + "/",
               data: {}
           }).done((resp) => {
               MicroModal.close('modal-1');

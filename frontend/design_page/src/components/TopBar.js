@@ -69,8 +69,13 @@ class TopBar extends React.Component {
                     <span
                         className={"feedback-tag bp3-tag bp3-intent-" + this.props.feedbackIntent + (this.props.feedbackHidden ? " hidden" : "")}>{this.props.feedback}</span>
 
+
                 </Navbar.Group>
+
                 <Navbar.Group align={Alignment.RIGHT}>
+                    <span
+                        className={"feedback-tag bp3-tag bp3-intent-" + this.props.webhookFeedbackIntent + (this.props.webhookFeedbackHidden ? " hidden" : "")}>{this.props.webhookFeedback}</span>
+
                     {/*<AnchorButton
                         icon="code"
                         minimal
@@ -89,6 +94,7 @@ class TopBar extends React.Component {
                         Setup Adafruit.io Webhooks
                     </Button>}
 
+                    {this.props.showMyDesigns &&
                     <AnchorButton
                         minimal
                         href="/list/designs/"
@@ -96,6 +102,7 @@ class TopBar extends React.Component {
                     >
                         My Designs
                     </AnchorButton>
+                    }
 
                     <AnchorButton
                         icon="download"

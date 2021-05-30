@@ -53,17 +53,18 @@ class CreateDesignView(View):
 
         new_design = Design(name=name)
         new_design.content_image.save('temp.bmp', File(blob), save=True)
-        new_design.user = request.user
 
-        try:
-            user_webhooks = UserDefaultWebhooks.objects.get(user=request.user)
-            new_design.aio_webhook_image = user_webhooks.image_webhook_url
-            new_design.aio_webhook_signature = user_webhooks.signature_webhook_url
+        if request.user.is_authenticated:
+            new_design.user = request.user
 
-            process_aio_hooks(new_design)
+            try:
+                user_webhooks = UserDefaultWebhooks.objects.get(user=request.user)
+                new_design.aio_webhook_image = user_webhooks.image_webhook_url
+                new_design.aio_webhook_signature = user_webhooks.signature_webhook_url
 
-        except UserDefaultWebhooks.DoesNotExist:
-            pass
+                process_aio_hooks(new_design)
+            except UserDefaultWebhooks.DoesNotExist:
+                pass
 
         new_design.content_json = json_data
 
@@ -92,11 +93,18 @@ class UpdateUserWebhooksView(View):
 
 
 class UpdateDesignWebhooksView(View):
-    def post(self, request, design_id):
-        try:
-            design = Design.objects.get(id=design_id, user=request.user)
-        except Design.DoesNotExist:
-            return JsonResponse({"success": False, "error": "Design not found"})
+    def post(self, request, design_uuid):
+
+        if request.user.is_authenticated:
+            try:
+                design = Design.objects.get(uuid=design_uuid, user=request.user)
+            except Design.DoesNotExist:
+                return JsonResponse({"success": False, "error": "Design not found"})
+        else:
+            try:
+                design = Design.objects.get(uuid=design_uuid)
+            except Design.DoesNotExist:
+                return JsonResponse({"success": False, "error": "Design not found"})
 
         preview_webhook_url = request.POST.get("preview_webhook")
         signature_webhook_url = request.POST.get("signature_webhook")
@@ -116,13 +124,19 @@ class DeleteDesignView(View):
         design.delete()
         return JsonResponse({"success": True})
 
-class UpdateDesignView(View):
-    def post(self, request, design_id):
+class UpdateDesignUUIDView(View):
+    def post(self, request, design_uuid):
 
-        try:
-            design = Design.objects.get(id=design_id, user=request.user)
-        except Design.DoesNotExist:
-            return JsonResponse({"success": False, "error": "Design not found"})
+        if request.user.is_authenticated:
+            try:
+                design = Design.objects.get(uuid=design_uuid, user=request.user)
+            except Design.DoesNotExist:
+                return JsonResponse({"success": False, "error": "Design not found"})
+        else:
+            try:
+                design = Design.objects.get(uuid=design_uuid)
+            except Design.DoesNotExist:
+                return JsonResponse({"success": False, "error": "Design not found"})
 
         name = request.POST.get("name")
 
@@ -188,8 +202,11 @@ def process_aio_hooks(design):
 
         data = {'value': imgstr}
 
-        resp = requests.post(aio_url, data=data)
-        print(resp.content)
+        try:
+            resp = requests.post(aio_url, data=data)
+            print(resp.content)
+        except requests.exceptions.RequestException as e:
+            print(e)
 
     if design.aio_webhook_signature:
         img_md5 = hashlib.md5(open(design.content_image.path, 'rb').read()).hexdigest()
@@ -202,7 +219,10 @@ def process_aio_hooks(design):
                 )})
         }
 
-        print(signature_data)
-        resp = requests.post(design.aio_webhook_signature, data=signature_data)
-        print(resp.status_code)
-        print(resp.content)
+        try:
+            print(signature_data)
+            resp = requests.post(design.aio_webhook_signature, data=signature_data)
+            print(resp.status_code)
+            print(resp.content)
+        except requests.exceptions.RequestException as e:
+            print(e)
