@@ -72,10 +72,12 @@
           {#									</li>#}
           {#									<li><a href="left-sidebar.html">Left Sidebar</a></li>#}
           {#									<li><a href="right-sidebar.html">Right Sidebar</a></li>#}
+
+
           {% if user.is_authenticated %}
-            <li><a href="/create/design/"><i class="fa fa-plus"></i>New Design</a></li>
-            <li><a href="/list/designs/">My Designs</a></li>
-            <li><a href="/accounts/profile/">Profile</a></li>
+            {% block nav %}
+
+            {% endblock %}
           {% else %}
             <li><a href="/accounts/login/">Login</a></li>
           {% endif %}

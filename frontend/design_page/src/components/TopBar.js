@@ -69,8 +69,13 @@ class TopBar extends React.Component {
                     <span
                         className={"feedback-tag bp3-tag bp3-intent-" + this.props.feedbackIntent + (this.props.feedbackHidden ? " hidden" : "")}>{this.props.feedback}</span>
 
+
                 </Navbar.Group>
+
                 <Navbar.Group align={Alignment.RIGHT}>
+                    <span
+                        className={"feedback-tag bp3-tag bp3-intent-" + this.props.webhookFeedbackIntent + (this.props.webhookFeedbackHidden ? " hidden" : "")}>{this.props.webhookFeedback}</span>
+
                     {/*<AnchorButton
                         icon="code"
                         minimal

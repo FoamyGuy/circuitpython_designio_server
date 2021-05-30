@@ -33,11 +33,7 @@ class NoUserWarningDialog extends React.Component {
     }
 
     render() {
-        console.log("url : " + this.props.preview_webhook_url);
-        setTimeout(() => {
-            $("#preview_webhook_input").val(this.props.preview_webhook_url);
-            $("#signature_webhook_input").val(this.props.signature_webhook_url);
-        }, 200);
+
         //
         return (
             <Dialog
@@ -54,10 +50,10 @@ class NoUserWarningDialog extends React.Component {
                     </p>
                     <p>
                         To further secure your designs you can create user account. Designs created by signed in users
-                        will be inaccessible to anyone else even if they did know the URL.
+                        will be inaccessible to anyone not signed in as the user who created it.
                     </p>
                     <p>
-                        Users can also create and save unlimited different designs and easily access them.
+                        Users can create and save unlimited different designs and easily access them.
                     </p>
                     <p>
                         Would you like to <a href={"/accounts/login/"}>Login</a> or <a href={"/accounts/register/"}>Create an account</a>?

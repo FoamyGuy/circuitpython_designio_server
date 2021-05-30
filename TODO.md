@@ -10,23 +10,28 @@
 - [x] add a link to create design page on my designs
 - [x] link to my designs from design page
 - [x] add a way to delete designs in the front end
-- [ ] change html title
+- [x] change html title
 - [ ] name the bmp file after the design name
 - [ ] resize panel to have relevant sizes
 - [x] Disallow empty name
 - [x] save needs to refresh cached json for leaving prompt
 - [x] download bmp button
-- [ ] guest designs?
+- [x] guest designs?
 - [x] ___ remove login required from view and create design
-- [ ] ___ add warning about guest designs
-- [ ] ___ hide user controls in UI
-- [ ] ___ add non-user lookup fallback for views
+- [x] ___ add warning about guest designs
+- [x] ___ hide user controls in UI
+- [x] ___ add non-user lookup fallback for views
 - [ ] ___ 
 - [ ] ___ 
-- [ ] Logout buttons 
+- [x] Logout buttons 
 - [ ]  
 - [ ]  
 - [x] cache busting my designs grid
+- [x] user feedback for webhook save
+- [ ] 
+- [ ] 
+- [ ] 
+- [ ] 
 - [ ] 
 
 

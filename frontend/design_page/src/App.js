@@ -37,16 +37,23 @@ class App extends React.Component {
             feedback: "Design Saved",
             feedbackIntent: "success",
             feedbackHidden: true,
+            webhookFeedback: "Design Saved",
+            webhookFeedbackIntent: "success",
+            webhookFeedbackHidden: true,
             webhookDialogOpen: false,
             savedDesignJson: {},
             noUserWarningDialogOpen: false
         }
         this.creating = true;
 
+        //console.log("loading input data in constructor")
+        this.input_data = $("#root").data("props");
+        //console.dir(this.input_data);
+
     }
 
     componentDidMount() {
-        this.input_data = $("#root").data("props");
+
         //console.log(input_data.data.hello);
         //console.dir(JSON.parse(input_data.data));
         function csrfSafeMethod(method) {
@@ -54,19 +61,19 @@ class App extends React.Component {
             return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
         }
 
-        console.log("ajax setup");
+        //console.log("ajax setup");
         $.ajaxSetup({
             beforeSend: (xhr, settings) => {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                     // Only send the token to relative URLs i.e. locally.
-                    console.log("ajax setup");
+                    //console.log("ajax setup");
                     xhr.setRequestHeader("X-CSRFToken", this.getCookie('csrftoken'));
                 }
             }
         });
 
 
-        console.log(this.input_data);
+        //console.log(this.input_data);
         if (this.input_data !== undefined &&
             this.input_data.data.hasOwnProperty("design_json")) {
             this.creating = false;
@@ -189,6 +196,9 @@ class App extends React.Component {
                         feedbackHidden={this.state.feedbackHidden}
                         feedbackIntent={this.state.feedbackIntent}
                         feedback={this.state.feedback}
+                        webhookFeedbackHidden={this.state.webhookFeedbackHidden}
+                        webhookFeedbackIntent={this.state.webhookFeedbackIntent}
+                        webhookFeedback={this.state.webhookFeedback}
                         codepyHidden={this.creating}
                         showMyDesigns={showMyDesigns}
                         showWebhookDialogClick={this.showWebhookDialog}
@@ -247,7 +257,7 @@ class App extends React.Component {
         console.log($("#signature_webhook_input").val());
         $.ajax({
             method: "POST",
-            url: "/update/design/" + this.input_data.data.id + "/webhooks/",
+            url: "/update/design/u/" + this.input_data.data.uuid + "/webhooks/",
             data: {
                 "preview_webhook": $("#preview_webhook_input").val(),
                 "signature_webhook": $("#signature_webhook_input").val()
@@ -256,6 +266,21 @@ class App extends React.Component {
             this.input_data.data["preview_webhook_url"] = $("#preview_webhook_input").val();
             this.input_data.data["signature_webhook_url"] = $("#signature_webhook_input").val();
             console.log(resp);
+            this.setState({
+                webhookFeedbackHidden: false,
+                webhookFeedbackIntent: "success",
+                webhookFeedback: "Webhooks saved successfully"
+            });
+            setTimeout(() => {
+                this.setState({webhookFeedbackHidden: true});
+            }, 3000);
+
+        }).error((error) => {
+            this.setState({
+                webhookFeedbackHidden: false,
+                webhookFeedbackIntent: "danger",
+                webhookFeedback: error.responseJSON.error
+            });
 
         });
     }
@@ -324,7 +349,7 @@ class App extends React.Component {
                 // update existing design
                 $.ajax({
                     method: "POST",
-                    url: "/update/design/" + this.input_data.data.id + "/",
+                    url: "/update/design/u/" + this.input_data.data.uuid + "/",
                     data: {
                         "image_base64": this.store.toDataURL(),
                         "json": JSON.stringify(this.store.toJSON()),
