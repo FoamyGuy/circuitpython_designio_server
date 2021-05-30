@@ -89,6 +89,7 @@ class TopBar extends React.Component {
                         Setup Adafruit.io Webhooks
                     </Button>}
 
+                    {this.props.showMyDesigns &&
                     <AnchorButton
                         minimal
                         href="/list/designs/"
@@ -96,6 +97,7 @@ class TopBar extends React.Component {
                     >
                         My Designs
                     </AnchorButton>
+                    }
 
                     <AnchorButton
                         icon="download"

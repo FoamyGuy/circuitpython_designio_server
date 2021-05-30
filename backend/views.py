@@ -53,17 +53,18 @@ class CreateDesignView(View):
 
         new_design = Design(name=name)
         new_design.content_image.save('temp.bmp', File(blob), save=True)
-        new_design.user = request.user
 
-        try:
-            user_webhooks = UserDefaultWebhooks.objects.get(user=request.user)
-            new_design.aio_webhook_image = user_webhooks.image_webhook_url
-            new_design.aio_webhook_signature = user_webhooks.signature_webhook_url
+        if request.user.is_authenticated:
+            new_design.user = request.user
 
-            process_aio_hooks(new_design)
+            try:
+                user_webhooks = UserDefaultWebhooks.objects.get(user=request.user)
+                new_design.aio_webhook_image = user_webhooks.image_webhook_url
+                new_design.aio_webhook_signature = user_webhooks.signature_webhook_url
 
-        except UserDefaultWebhooks.DoesNotExist:
-            pass
+                process_aio_hooks(new_design)
+            except UserDefaultWebhooks.DoesNotExist:
+                pass
 
         new_design.content_json = json_data
 
@@ -93,10 +94,17 @@ class UpdateUserWebhooksView(View):
 
 class UpdateDesignWebhooksView(View):
     def post(self, request, design_id):
-        try:
-            design = Design.objects.get(id=design_id, user=request.user)
-        except Design.DoesNotExist:
-            return JsonResponse({"success": False, "error": "Design not found"})
+
+        if request.user.is_authenticated:
+            try:
+                design = Design.objects.get(id=design_id, user=request.user)
+            except Design.DoesNotExist:
+                return JsonResponse({"success": False, "error": "Design not found"})
+        else:
+            try:
+                design = Design.objects.get(id=design_id)
+            except Design.DoesNotExist:
+                return JsonResponse({"success": False, "error": "Design not found"})
 
         preview_webhook_url = request.POST.get("preview_webhook")
         signature_webhook_url = request.POST.get("signature_webhook")
@@ -119,10 +127,16 @@ class DeleteDesignView(View):
 class UpdateDesignView(View):
     def post(self, request, design_id):
 
-        try:
-            design = Design.objects.get(id=design_id, user=request.user)
-        except Design.DoesNotExist:
-            return JsonResponse({"success": False, "error": "Design not found"})
+        if request.user.is_authenticated:
+            try:
+                design = Design.objects.get(id=design_id, user=request.user)
+            except Design.DoesNotExist:
+                return JsonResponse({"success": False, "error": "Design not found"})
+        else:
+            try:
+                design = Design.objects.get(id=design_id)
+            except Design.DoesNotExist:
+                return JsonResponse({"success": False, "error": "Design not found"})
 
         name = request.POST.get("name")
 

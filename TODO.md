@@ -17,6 +17,15 @@
 - [x] save needs to refresh cached json for leaving prompt
 - [x] download bmp button
 - [ ] guest designs?
+- [x] ___ remove login required from view and create design
+- [ ] ___ add warning about guest designs
+- [ ] ___ hide user controls in UI
+- [ ] ___ add non-user lookup fallback for views
+- [ ] ___ 
+- [ ] ___ 
+- [ ] Logout buttons 
+- [ ]  
+- [ ]  
 - [x] cache busting my designs grid
 - [ ] 
 

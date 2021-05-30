@@ -8,6 +8,7 @@ import Topbar from './components/TopBar';
 
 import PhotosPanel from "./components/ImagePanel"
 import WebhooksDialog from "./components/WebhooksDialog";
+import NoUserWarningDialog from "./components/NoUserWarningDialog";
 import {PhotosSection} from 'polotno/side-panel/side-panel';
 import $ from 'jquery';
 import {SidePanel, DEFAULT_SECTIONS} from 'polotno/side-panel/side-panel';
@@ -38,9 +39,9 @@ class App extends React.Component {
             feedbackHidden: true,
             webhookDialogOpen: false,
             savedDesignJson: {},
+            noUserWarningDialogOpen: false
         }
         this.creating = true;
-
 
     }
 
@@ -87,6 +88,18 @@ class App extends React.Component {
             // empty page if nothing to load
             this.store.addPage();
             this.setState({savedDesignJson: this.store.toJSON()});
+        }
+
+
+        console.log(`username: ${this.input_data.data.username}`);
+
+
+        if (this.input_data !== undefined &&
+            this.input_data.data.hasOwnProperty("username") &&
+            this.input_data.data.username === ""
+        ) {
+            console.log("user was blank")
+            this.setState({noUserWarningDialogOpen: true});
         }
 
 
@@ -149,6 +162,9 @@ class App extends React.Component {
     render = () => {
         console.log("input data inside render");
         console.log(this.input_data)
+        const username = this.input_data ? this.input_data.data.username : "";
+        // only show if username is not blank
+        const showMyDesigns = username !== "";
         return (
             <React.Fragment>
                 <Toaster
@@ -163,6 +179,10 @@ class App extends React.Component {
                     preview_webhook_url={this.input_data ? this.input_data.data.preview_webhook_url : ""}
                     signature_webhook_url={this.input_data ? this.input_data.data.signature_webhook_url : ""}
                 />
+                <NoUserWarningDialog
+                    isOpen={this.state.noUserWarningDialogOpen}
+                    handleClose={this.handleNoUserWarningDialogClose}
+                />
                 <Topbar store={this.store}
                         clickSave={this.clickSave}
                         clickSaveAIO={this.clickSaveAIO}
@@ -170,6 +190,7 @@ class App extends React.Component {
                         feedbackIntent={this.state.feedbackIntent}
                         feedback={this.state.feedback}
                         codepyHidden={this.creating}
+                        showMyDesigns={showMyDesigns}
                         showWebhookDialogClick={this.showWebhookDialog}
                         uuid={!this.creating ? this.input_data.data.uuid : ""}
                         image_file={this.input_data ? this.input_data.data.image_file : ""}
@@ -242,6 +263,12 @@ class App extends React.Component {
     handleWebhooksDialogClose = () => {
         this.setState({
             webhookDialogOpen: false
+        })
+    }
+
+    handleNoUserWarningDialogClose = () => {
+        this.setState({
+            noUserWarningDialogOpen: false
         })
     }
 

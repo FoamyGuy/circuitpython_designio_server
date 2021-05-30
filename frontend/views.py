@@ -40,7 +40,15 @@ class DocsView(View):
 
 class CreateDesignView(View):
     def get(self, request):
-        return render(request, 'frontend/polotno_designer.html', {"context_data": json.dumps({"hello": "world"})})
+        if request.user.is_authenticated:
+            username = request.user.username
+        else:
+            username = ""
+
+        return render(request, 'frontend/polotno_designer.html', {
+            "context_data": json.dumps({
+                "username": username
+            })})
 
 
 class ViewDesignView(View):
@@ -67,16 +75,26 @@ class ListDesignsView(View):
 
 class ViewDesignUUIDView(View):
     def get(self, request, design_uuid):
-        try:
-            design_obj = Design.objects.get(uuid=design_uuid, user=request.user)
-        except Design.DoesNotExist:
-            return HttpResponse("Design Not Found")
+        print(request.user.username)
+        if request.user.is_authenticated:
+            username = request.user.username
+            try:
+                design_obj = Design.objects.get(uuid=design_uuid, user=request.user)
+            except Design.DoesNotExist:
+                return HttpResponse("Design Not Found")
+        else:
+            username = ""
+            try:
+                design_obj = Design.objects.get(uuid=design_uuid)
+            except Design.DoesNotExist:
+                return HttpResponse("Design Not Found")
 
         return render(request, 'frontend/polotno_designer.html',
                       {"context_data": json.dumps(
                           {"id": design_obj.id,
                            "uuid": str(design_obj.uuid),
                            "name": design_obj.name,
+                           "username": username,
                            "preview_webhook_url": design_obj.aio_webhook_image,
                            "signature_webhook_url": design_obj.aio_webhook_signature,
                            "image_file": design_obj.content_image.file.name.split("/")[-1],
